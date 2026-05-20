@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScadaServerConfig>
+  <General>
+    <ServerName>IndustrialDigitalTwin</ServerName>
+    <Description>SCADA система для управления цифровыми двойниками</Description>
+  </General>
+  <CommunicationLines>
+    <Line>
+      <Name>ModbusTCP</Name>
+      <Type>Modbus TCP</Type>
+      <ConnectionString>127.0.0.1:502</ConnectionString>
+    </Line>
+  </CommunicationLines>
+</ScadaServerConfig>

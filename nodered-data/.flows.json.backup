@@ -1,0 +1,336 @@
+[
+    {
+        "id": "bf299fd77a21b151",
+        "type": "tab",
+        "label": "Управление",
+        "disabled": false
+    },
+    {
+        "id": "dashboard-tab",
+        "type": "ui_tab",
+        "name": "Промышленная автоматизация",
+        "icon": "dashboard",
+        "order": 1
+    },
+    {
+        "id": "control-group",
+        "type": "ui_group",
+        "name": "Управление",
+        "tab": "dashboard-tab",
+        "order": 1
+    },
+    {
+        "id": "status-group",
+        "type": "ui_group",
+        "name": "Состояние",
+        "tab": "dashboard-tab",
+        "order": 2
+    },
+    {
+        "id": "water-group",
+        "type": "ui_group",
+        "name": "Смешивание воды",
+        "tab": "dashboard-tab",
+        "order": 4
+    },
+    {
+        "id": "db45c55309508d23",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "main-tab",
+        "type": "ui_tab",
+        "name": "Industrial Digital Twin",
+        "icon": "dashboard",
+        "order": 1
+    },
+    {
+        "id": "ui-group",
+        "type": "ui_group",
+        "name": "Панель управления",
+        "tab": "main-tab",
+        "order": 1
+    },
+    {
+        "id": "d7b2bc5234daeb1a",
+        "type": "ui_group",
+        "name": "Датчики",
+        "tab": "main-tab",
+        "order": 3
+    },
+    {
+        "id": "eec46bc2e1e7c585",
+        "type": "ui_group",
+        "name": "Датчики процесса",
+        "tab": "dashboard-tab",
+        "order": 3,
+        "width": 6
+    },
+    {
+        "id": "6707859a87c76b94",
+        "type": "ui_group",
+        "name": "Главная панель",
+        "tab": "main-tab",
+        "order": 1,
+        "width": 6
+    },
+    {
+        "id": "5b6e3376ca1e2a95",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": 8086,
+        "protocol": "http",
+        "database": "database",
+        "name": "industrial_db",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://localhost:8086",
+        "timeout": 10,
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "a2bf607fef3eda12",
+        "type": "ui_button",
+        "z": "bf299fd77a21b151",
+        "name": "",
+        "group": "6707859a87c76b94",
+        "width": "",
+        "height": "",
+        "passthru": false,
+        "label": "🚀 СТАРТ СИСТЕМЫ",
+        "tooltip": "",
+        "color": "#ffffff",
+        "bgcolor": "#00aa00",
+        "className": "",
+        "icon": "",
+        "payload": "start",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 400,
+        "y": 540,
+        "wires": [
+            [
+                "dc041e5286ef0606"
+            ]
+        ]
+    },
+    {
+        "id": "dc041e5286ef0606",
+        "type": "function",
+        "z": "bf299fd77a21b151",
+        "name": "Логика",
+        "func": "// Сбрасываем все флаги при старте\nflow.set('systemRunning', true);\nflow.set('temp', 50);           // Начальная температура\nflow.set('pid', false);         // ПИД выключен\nflow.set('stabilized', false);  // СБРАСЫВАЕМ ФЛАГ СТАБИЛИЗАЦИИ\n\nnode.warn('🚀 СИСТЕМА ЗАПУЩЕНА');\nnode.warn('🌡️ Начальная температура: 50°C');\nnode.warn('⏳ Начинаем нагрев...');\n\nmsg.payload = { status: 'running', temp: 50 };\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 540,
+        "wires": [
+            [
+                "5b81c5e124352087",
+                "2834f868063b3ef2"
+            ]
+        ]
+    },
+    {
+        "id": "5b81c5e124352087",
+        "type": "ui_text",
+        "z": "bf299fd77a21b151",
+        "group": "6707859a87c76b94",
+        "label": "Статус",
+        "format": "{{msg.payload.status === 'running' ? '🟢 ЗАПУЩЕНА' : '🔴 ОСТАНОВЛЕНА'}}",
+        "x": 980,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "d833257c811ecd09",
+        "type": "inject",
+        "z": "bf299fd77a21b151",
+        "name": "Симуляция",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 750,
+        "y": 320,
+        "wires": [
+            [
+                "ab5a1f844dcd5deb"
+            ]
+        ]
+    },
+    {
+        "id": "ab5a1f844dcd5deb",
+        "type": "function",
+        "z": "bf299fd77a21b151",
+        "name": "Модель смешивания",
+        "func": "if (!flow.get('systemRunning')) return null;\n\nlet temp = flow.get('temp') || 50;\nlet pid = flow.get('pid') || false;\nlet stabilized = flow.get('stabilized') || false;\n\n// Если уже стабилизировались - ничего не делаем\nif (stabilized) {\n    return null;\n}\n\nif (!pid && temp < 80) {\n    // Нагрев\n    temp = temp + 2;\n    if (temp >= 60) {\n        pid = true;\n        node.warn('🚨 АЛЕРТ! Температура: ' + temp + '°C');\n        node.warn('🔥 Активация ПИД-регулятора');\n    }\n} else if (pid && temp > 40) {\n    // Охлаждение\n    temp = temp - 1;\n    if (temp <= 40.5) {\n        pid = false;\n        stabilized = true;\n        node.warn('✅ Стабилизация на 40°C');\n        node.warn('✅ Процесс завершён');\n    }\n}\n\n// Сохраняем значения\nflow.set('temp', temp);\nflow.set('pid', pid);\nflow.set('stabilized', stabilized);\n\n// Отправляем в InfluxDB\nlet influxMsg = {\n    payload: {\n        measurement: \"water_mixer\",\n        fields: {\n            temperature: temp,\n            pid_active: pid ? 1 : 0\n        },\n        tags: {\n            device: \"digital_twin\"\n        }\n    }\n};\n\n// Отправляем оба сообщения: первое в InfluxDB, второе на дашборд\nnode.send([influxMsg, { payload: temp }]);\n\nreturn;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 400,
+        "wires": [
+            [
+                "1336275aacc8160a",
+                "c3c4ae83f36527a2"
+            ]
+        ]
+    },
+    {
+        "id": "1336275aacc8160a",
+        "type": "ui_gauge",
+        "z": "bf299fd77a21b151",
+        "group": "6707859a87c76b94",
+        "label": "Температура",
+        "format": "{{value}}°C",
+        "min": 0,
+        "max": 100,
+        "x": 1040,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c3c4ae83f36527a2",
+        "type": "ui_text",
+        "z": "bf299fd77a21b151",
+        "group": "6707859a87c76b94",
+        "label": "ПИД-регулятор",
+        "format": "{{flow.get('pid') ? '🟢 АКТИВЕН' : '⚫ ВЫКЛ'}}",
+        "x": 1060,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "2834f868063b3ef2",
+        "type": "influxdb out",
+        "z": "bf299fd77a21b151",
+        "influxdb": "5b6e3376ca1e2a95",
+        "name": "industrial_db",
+        "measurement": "water_mixer",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "industrial_db",
+        "x": 850,
+        "y": 500,
+        "wires": []
+    }
+]

@@ -1,0 +1,180 @@
+[
+  {
+    "id": "tab-dashboard",
+    "type": "tab",
+    "label": "Панель управления",
+    "disabled": false
+  },
+  {
+    "id": "ui-button-start",
+    "type": "ui_button",
+    "z": "tab-dashboard",
+    "name": "Старт системы",
+    "group": "control-group",
+    "label": "▶ СТАРТ",
+    "color": "#ffffff",
+    "bgcolor": "#00aa00",
+    "payload": "start",
+    "payloadType": "str",
+    "wires": [["system-control"]]
+  },
+  {
+    "id": "ui-button-stop",
+    "type": "ui_button",
+    "z": "tab-dashboard",
+    "name": "Стоп системы",
+    "group": "control-group",
+    "label": "⏹ СТОП",
+    "color": "#ffffff",
+    "bgcolor": "#aa0000",
+    "payload": "stop",
+    "payloadType": "str",
+    "wires": [["system-control"]]
+  },
+  {
+    "id": "system-control",
+    "type": "function",
+    "z": "tab-dashboard",
+    "name": "Логика запуска/остановки",
+    "func": "let running = flow.get('running') || false;\n\nif (msg.payload === 'start') {\n    running = true;\n    node.status({fill:\"green\", shape:\"dot\", text:\"Система запущена\"});\n    node.warn(\"🚀 СИСТЕМА ЗАПУЩЕНА\");\n} else if (msg.payload === 'stop') {\n    running = false;\n    node.status({fill:\"red\", shape:\"dot\", text:\"Система остановлена\"});\n    node.warn(\"⏹ СИСТЕМА ОСТАНОВЛЕНА\");\n}\n\nflow.set('running', running);\n\nreturn { payload: { running: running, command: msg.payload } };",
+    "wires": [["status-text", "debug", "start-java"]]
+  },
+  {
+    "id": "start-java",
+    "type": "exec",
+    "z": "tab-dashboard",
+    "name": "Запуск Java модели",
+    "command": "gnome-terminal -- bash -c 'cd /home/nikita/industrial-docker/barrier-model && java com.industrial.BarrierFullModel'",
+    "useSpawn": "false",
+    "timer": "",
+    "oldrc": false,
+    "wires": [[], [], []]
+  },
+  {
+    "id": "status-text",
+    "type": "ui_text",
+    "z": "tab-dashboard",
+    "group": "status-group",
+    "label": "Статус системы",
+    "format": "{{msg.payload.running ? '🟢 ЗАПУЩЕНА' : '🔴 ОСТАНОВЛЕНА'}}",
+    "wires": []
+  },
+  {
+    "id": "barrier-angle",
+    "type": "ui_gauge",
+    "z": "tab-dashboard",
+    "name": "Угол шлагбаума",
+    "group": "barrier-group",
+    "format": "{{value}}°",
+    "min": 0,
+    "max": 90,
+    "wires": []
+  },
+  {
+    "id": "water-temp",
+    "type": "ui_gauge",
+    "z": "tab-dashboard",
+    "name": "Температура смеси",
+    "group": "water-group",
+    "format": "{{value}}°C",
+    "min": 0,
+    "max": 100,
+    "wires": []
+  },
+  {
+    "id": "pid-status",
+    "type": "ui_text",
+    "z": "tab-dashboard",
+    "group": "water-group",
+    "label": "ПИД-регулятор",
+    "format": "{{msg.payload}}",
+    "wires": []
+  },
+  {
+    "id": "simulate-water",
+    "type": "inject",
+    "z": "tab-dashboard",
+    "name": "Симуляция (каждые 2 сек)",
+    "repeat": "2",
+    "crontab": "",
+    "once": true,
+    "wires": [["water-logic"]]
+  },
+  {
+    "id": "water-logic",
+    "type": "function",
+    "z": "tab-dashboard",
+    "name": "Логика смешивания",
+    "func": "let running = flow.get('running') || false;\nif (!running) return null;\n\nlet temp = flow.get('temp') || 40;\nlet hot = flow.get('hot') || 50;\nlet cold = flow.get('cold') || 0;\nlet pid = flow.get('pid') || false;\n\nif (!pid && temp < 80) {\n    temp = Math.min(80, temp + 2);\n    hot = 50;\n    cold = 0;\n    if (temp >= 60) {\n        pid = true;\n        node.warn(\"🚨 АЛЕРТ! Температура: \" + temp + \"°C\");\n    }\n} else if (pid && temp > 40) {\n    cold = Math.min(100, cold + 10);\n    hot = Math.max(0, hot - 5);\n    temp = Math.max(40, temp - 1);\n    if (temp <= 40.5) {\n        pid = false;\n    }\n}\n\nflow.set('temp', temp);\nflow.set('hot', hot);\nflow.set('cold', cold);\nflow.set('pid', pid);\n\nmsg = {\n    payload: { temperature: temp, hotFlow: hot, coldFlow: cold, pidActive: pid }\n};\nreturn msg;",
+    "wires": [["water-temp", "pid-status", "influx-write"]]
+  },
+  {
+    "id": "influx-write",
+    "type": "function",
+    "z": "tab-dashboard",
+    "name": "Отправка в InfluxDB",
+    "func": "let data = msg.payload;\nif (data.temperature) {\n    msg.payload = {\n        measurement: \"industrial_data\",\n        fields: {\n            temperature: data.temperature,\n            hotFlow: data.hotFlow,\n            coldFlow: data.coldFlow,\n            totalFlow: data.hotFlow + data.coldFlow,\n            pidActive: data.pidActive ? 1 : 0\n        },\n        timestamp: Date.now() * 1000000\n    };\n    return msg;\n}\nreturn null;",
+    "wires": [["influxdb-out"]]
+  },
+  {
+    "id": "influxdb-out",
+    "type": "influxdb out",
+    "z": "tab-dashboard",
+    "name": "InfluxDB",
+    "influxdb": "influx-config",
+    "measurement": "data",
+    "precision": "ns",
+    "wires": []
+  },
+  {
+    "id": "debug",
+    "type": "debug",
+    "z": "tab-dashboard",
+    "name": "Отладка",
+    "active": true
+  },
+  {
+    "id": "control-group",
+    "type": "ui_group",
+    "name": "Управление",
+    "tab": "dashboard-tab",
+    "order": 1
+  },
+  {
+    "id": "status-group",
+    "type": "ui_group",
+    "name": "Состояние",
+    "tab": "dashboard-tab",
+    "order": 2
+  },
+  {
+    "id": "barrier-group",
+    "type": "ui_group",
+    "name": "Шлагбаум",
+    "tab": "dashboard-tab",
+    "order": 3
+  },
+  {
+    "id": "water-group",
+    "type": "ui_group",
+    "name": "Смешивание воды",
+    "tab": "dashboard-tab",
+    "order": 4
+  },
+  {
+    "id": "dashboard-tab",
+    "type": "ui_tab",
+    "name": "Промышленная автоматизация",
+    "icon": "dashboard",
+    "order": 1
+  },
+  {
+    "id": "influx-config",
+    "type": "influxdb",
+    "hostname": "influxdb",
+    "port": "8086",
+    "database": "industrial_db",
+    "username": "admin",
+    "password": "password"
+  }
+]

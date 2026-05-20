@@ -1,20 +1,18 @@
 services:
-  # OpenPLC - собираем из исходников, как описано в документации [citation:6]
   openplc:
     build: https://github.com/thiagoralves/OpenPLC_v3.git
     container_name: industrial-openplc
     ports:
-      - "502:502"      # Modbus TCP
-      - "8080:8080"    # Веб-интерфейс для загрузки программ
+      - "728:502"
+      - "8306:8080"
     privileged: true
     restart: unless-stopped
 
-  # InfluxDB - база данных для хранения метрик
   influxdb:
     image: influxdb:2.7
     container_name: industrial-influxdb
     ports:
-      - "8086:8086"
+      - "8312:8086"
     environment:
       - INFLUXDB_DB=industrial_db
       - INFLUXDB_ADMIN_USER=admin
@@ -23,31 +21,29 @@ services:
       - influxdb-data:/var/lib/influxdb2
     restart: unless-stopped
 
-  # Grafana - визуализация и алерты
   grafana:
     image: grafana/grafana:latest
     container_name: industrial-grafana
     ports:
-      - "3000:3000"
+      - "3226:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
     depends_on:
       - influxdb
     restart: unless-stopped
 
-  # Node-RED - визуальный редактор для связывания всего воедино
   nodered:
     image: nodered/node-red:latest
     container_name: industrial-nodered
     ports:
-      - "1880:1880"
+      - "2106:1880"
     volumes:
-      - nodered-data:/data
+      - ./nodered-data:/data
     restart: unless-stopped
 
 volumes:
   influxdb-data:
   grafana-data:
-  nodered-data:

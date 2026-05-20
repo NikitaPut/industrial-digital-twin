@@ -1,0 +1,27 @@
+{
+  "title": "Промышленная автоматизация",
+  "panels": [
+    {
+      "title": "Температура смеси",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "temperature",
+          "legendFormat": "Температура"
+        }
+      ],
+      "alert": {
+        "name": "Критическая температура",
+        "message": "Температура достигла 60°C!",
+        "conditions": [
+          {
+            "type": "query",
+            "reducer": { "type": "avg" },
+            "operator": { "type": ">" },
+            "value": 60
+          }
+        ]
+      }
+    }
+  ]
+}

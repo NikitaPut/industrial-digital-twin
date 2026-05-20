@@ -1,0 +1,43 @@
+[
+  {
+    "id": "tab-influx",
+    "type": "tab",
+    "label": "InfluxDB"
+  },
+  {
+    "id": "http-endpoint",
+    "type": "http in",
+    "z": "tab-influx",
+    "name": "Приём данных",
+    "url": "/api/data",
+    "method": "post",
+    "wires": [["parse-data"]]
+  },
+  {
+    "id": "parse-data",
+    "type": "function",
+    "z": "tab-influx",
+    "name": "Парсинг",
+    "func": "let data = msg.payload;\nlet influxData = [];\n\nif (data.temperature) {\n    influxData.push({\n        measurement: \"water_mixer\",\n        fields: {\n            temperature: data.temperature,\n            hotFlow: data.hotFlow || 0,\n            coldFlow: data.coldFlow || 0,\n            totalFlow: (data.hotFlow || 0) + (data.coldFlow || 0),\n            pidActive: data.pidActive ? 1 : 0\n        },\n        timestamp: Date.now() * 1000000\n    });\n}\n\nif (data.angle !== undefined) {\n    influxData.push({\n        measurement: \"barrier\",\n        fields: {\n            angle: data.angle,\n            error: data.error ? 1 : 0,\n            limitOpen: data.limitOpen ? 1 : 0,\n            limitClosed: data.limitClosed ? 1 : 0\n        },\n        timestamp: Date.now() * 1000000\n    });\n}\n\nmsg.payload = influxData;\nreturn msg;",
+    "wires": [["influx-write"]]
+  },
+  {
+    "id": "influx-write",
+    "type": "influxdb out",
+    "z": "tab-influx",
+    "name": "Запись",
+    "influxdb": "influx-config",
+    "measurement": "data",
+    "precision": "ns",
+    "wires": []
+  },
+  {
+    "id": "influx-config",
+    "type": "influxdb",
+    "hostname": "influxdb",
+    "port": "8086",
+    "database": "industrial_db",
+    "username": "admin",
+    "password": "password"
+  }
+]
